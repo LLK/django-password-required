@@ -28,14 +28,19 @@ class AuthenticationForm(forms.Form):
         Validate that the password entered was correct.
         """
         password = self.cleaned_data.get('password')
-        correct_password = getattr(settings, 'PASSWORD_REQUIRED_PASSWORD', None)
-
-        if not correct_password:
+        valid_passwords = getattr(settings, 'PASSWORD_REQUIRED_PASSWORD', None)
+        
+        if not valid_passwords:
             raise forms.ValidationError(_("PASSWORD_REQUIRED_PASSWORD is not set, and thus it is currently impossible to log in."))
 
-        if not (password == correct_password or
-                password.strip() == correct_password):
-            raise forms.ValidationError(_("Please enter the correct password. Note that the password is case-sensitive."))
+        fail = True
+        for pswd in valid_passwords:
+            if (password == pswd or password.strip() == pswd):
+                fail = False
+      
+        if fail:
+            raise forms.ValidationError(_("Invalid code. If you've accessed the site before, just enter the password you used previously."))
+
 
         # TODO: determine whether this should move to its own method.
         if self.request:
