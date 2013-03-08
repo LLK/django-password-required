@@ -10,7 +10,7 @@ class AuthenticationForm(forms.Form):
     A copy of django.contrib.auth.forms.AuthenticationForm, adapted to this
     much simpler use case.
     """
-    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+    password = forms.CharField(label=_("Access Code"), widget=forms.PasswordInput)
 
     def __init__(self, request=None, *args, **kwargs):
         """
